@@ -1,7 +1,7 @@
 -- Criar banco de dados
 CREATE DATABASE IF NOT EXISTS challenge_w2o
-  DEFAULT CHARACTER SET utf8mb4
-  DEFAULT COLLATE utf8mb4_general_ci;
+    DEFAULT CHARACTER SET utf8mb4
+    DEFAULT COLLATE utf8mb4_general_ci;
 
 USE challenge_w2o;
 
@@ -47,28 +47,36 @@ CREATE TABLE movimentos_estoque (
 -- VIEW: Estoque atual
 -- ==============================
 CREATE OR REPLACE VIEW vw_estoque_atual AS
-SELECT 
-    p.id AS produto_id,
-    p.nome,
-    p.sku,
-    p.preco,
-    p.categoria_id,
-    COALESCE(SUM(CASE WHEN m.tipo = 'entrada' THEN m.quantidade ELSE 0 END), 0) -
-    COALESCE(SUM(CASE WHEN m.tipo = 'saida' THEN m.quantidade ELSE 0 END), 0) AS quantidade_em_estoque
-FROM produtos p
-LEFT JOIN movimentos_estoque m ON p.id = m.produto_id
-GROUP BY p.id;
+                SELECT produtos.id AS produto_id,
+                       produtos.nome,
+                       produtos.sku,
+                       produtos.preco,
+                       categorias.nome AS categoria,
+                       COALESCE(SUM(CASE WHEN movimentos_estoque.tipo = 'entrada' THEN movimentos_estoque.quantidade ELSE 0 END), 0) -
+                       COALESCE(SUM(CASE WHEN movimentos_estoque.tipo = 'saida' THEN movimentos_estoque.quantidade ELSE 0 END), 0) AS quantidade_em_estoque
+                  FROM produtos
+             LEFT JOIN categorias 
+                    ON categorias.id = produtos.categoria_id
+             LEFT JOIN movimentos_estoque
+                    ON movimentos_estoque.produto_id = produtos.id
+              GROUP BY produtos.id, 
+                       produtos.nome, 
+                       produtos.sku, 
+                       produtos.preco, 
+                       categorias.nome;
 
 -- ==============================
--- VIEW: Ranking Top 10 Produtos Mais Vendidos
+-- VIEW: Ranking 10 Produtos Mais Saídas
 -- ==============================
-CREATE OR REPLACE VIEW vw_top10_produtos_vendidos AS
-SELECT 
-    p.id AS produto_id,
-    p.nome,
-    SUM(CASE WHEN m.tipo = 'saida' THEN m.quantidade ELSE 0 END) AS total_vendido
-FROM produtos p
-JOIN movimentos_estoque m ON p.id = m.produto_id
-GROUP BY p.id
-ORDER BY total_vendido DESC
-LIMIT 10;
+CREATE OR REPLACE VIEW vw_ranking_produtos_mais_saidas AS
+                SELECT produtos.id AS produto_id,
+                       produtos.nome,
+                       SUM(movimentos_estoque.quantidade) AS total_saidas
+                  FROM produtos
+            INNER JOIN movimentos_estoque
+                    ON produtos.id = movimentos_estoque.produto_id
+                 WHERE movimentos_estoque.tipo = 'saida'
+              GROUP BY produtos.id,
+                       produtos.nome
+              ORDER BY total_saidas DESC
+                 LIMIT 10;
