@@ -20,10 +20,10 @@ class MovimentoEstoque {
     public function __construct(
         ?int $id = null,
         int $produtoId = 0,
-        string $tipo = "entrada",
+        string $tipo = 'entrada',
         int $quantidade = 0,
-        string $dataMovimento = "",
-        string $usuario = ""
+        string $dataMovimento = '',
+        string $usuario = ''
     ) {
         $this->setId($id);
         $this->setProdutoId($produtoId);

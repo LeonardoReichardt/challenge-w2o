@@ -40,7 +40,7 @@ class CategoriaController extends Controller {
             $categoria = $useCase->execute($id);
             
             if($categoria) {
-                $this->view("categorias/edit", ["categoria" => $categoria]);
+                $this->view('categorias/edit', ['categoria' => $categoria]);
                 return;
             }
         } 

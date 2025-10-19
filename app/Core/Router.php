@@ -39,7 +39,7 @@ class Router {
                     }
                     else {
                         http_response_code(404);
-                        echo "Controller ou método não encontrado.";
+                        echo 'Controller ou método não encontrado.';
                     }
                 }
 

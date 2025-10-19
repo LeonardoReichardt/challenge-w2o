@@ -13,7 +13,7 @@ class Categoria {
 
     #region Construtor
 
-    public function __construct(?int $id = null, string $nome = "") {
+    public function __construct(?int $id = null, string $nome = '') {
         $this->setId($id);
         $this->setNome($nome);
     }

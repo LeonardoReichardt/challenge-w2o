@@ -23,14 +23,14 @@ class Produto {
 
     public function __construct(
         ?int $id = null,
-        string $sku = "",
-        string $nome = "",
+        string $sku = '',
+        string $nome = '',
         ?string $descricao = null,
         float $preco = 0.0,
         ?string $foto = null,
         ?string $dataVencimento = null,
-        string $dataCadastro = "",
-        string $dataEdicao = "",
+        string $dataCadastro = '',
+        string $dataEdicao = '',
         int $categoriaId = 0
     ) {
         $this->setId($id);

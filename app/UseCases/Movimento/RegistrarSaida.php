@@ -19,7 +19,7 @@ class RegistrarSaida {
             $produtoId,
             'saida',
             $quantidade,
-            date("Y-m-d H:i:s"),
+            date('Y-m-d H:i:s'),
             $usuario
         );
 
