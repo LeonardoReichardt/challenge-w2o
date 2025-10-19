@@ -7,6 +7,7 @@ use App\UseCases\Categoria\ListCategorias;
 use App\UseCases\Categoria\CreateCategoria;
 use App\UseCases\Categoria\UpdateCategoria;
 use App\UseCases\Categoria\DeleteCategoria;
+use App\UseCases\Categoria\FindCategoria;
 
 class CategoriaController extends Controller {
 
@@ -35,13 +36,16 @@ class CategoriaController extends Controller {
         $id = (int)($_GET['id'] ?? 0);
 
         if($id > 0) {
-            $useCase = new ListCategorias();
-            $categorias = $useCase->execute();
-            $this->view('categorias/edit', ['categoria' => $categorias[$id] ?? null]);
+            $useCase = new FindCategoria();
+            $categoria = $useCase->execute($id);
+            
+            if($categoria) {
+                $this->view("categorias/edit", ["categoria" => $categoria]);
+                return;
+            }
         } 
-        else {
-            $this->redirect("/categorias");
-        }
+
+        $this->redirect('/categorias');
     }
 
     public function update(): void {

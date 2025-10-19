@@ -8,6 +8,7 @@ use App\UseCases\Produto\CreateProduto;
 use App\UseCases\Produto\UpdateProduto;
 use App\UseCases\Produto\DeleteProduto;
 use App\UseCases\Categoria\ListCategorias;
+use App\UseCases\Produto\FindProduto;
 
 class ProdutoController extends Controller {
 
@@ -47,17 +48,22 @@ class ProdutoController extends Controller {
         $id = (int)($_GET['id'] ?? 0);
 
         if($id > 0) {
-            $produtos = (new ListProdutos())->execute();
-            $categorias = (new ListCategorias())->execute();
+            $useCase = new FindProduto();
+            $produto = $useCase->execute($id);
 
-            $this->view('produtos/edit', [
-                'produto'    => $produtos[$id - 1] ?? null,
-                'categorias' => $categorias
-            ]);
-        } 
-        else {
-            $this->redirect('/produtos');
+            if($produto) {
+                $categorias = (new ListCategorias())->execute();
+
+                $this->view('produtos/edit', [
+                    'produto'    => $produto,
+                    'categorias' => $categorias
+                ]);
+
+                return;
+            }
         }
+
+        $this->redirect('/produtos');
     }
 
     public function update(): void {

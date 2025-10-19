@@ -3,8 +3,9 @@
 namespace App\UseCases\Categoria;
 
 use App\Repositories\CategoriaRepository;
+use App\Entities\Categoria;
 
-class ListCategorias {
+class FindCategoria {
 
     private CategoriaRepository $repository;
 
@@ -12,8 +13,8 @@ class ListCategorias {
         $this->repository = new CategoriaRepository();
     }
 
-    public function execute(): array {
-        return $this->repository->getAll();
+    public function execute(int $id): ?Categoria {
+        return $this->repository->findById($id);
     }
-    
+
 }
