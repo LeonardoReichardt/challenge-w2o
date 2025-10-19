@@ -12,11 +12,11 @@ $basePath = $config['base_path'];
 
 $router = new Router();
 
-$router->get('/', function() use ($basePath) {
-    echo "<h1>Sistema de Gerenciamento de Estoque</h1>";
-    echo "<p>Bem-vindo! 🚀</p>";
-    echo "<a href='{$basePath}/produtos'>Ver produtos</a>";
-});
+#region Rota Página Inicial
+
+$router->get('/', ['HomeController', 'index']);
+
+#endregion
 
 #region Rotas de Produtos
 
