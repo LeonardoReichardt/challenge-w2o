@@ -2,7 +2,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Produtos</h2>
-    <a href="/produtos/create" class="btn btn-primary">Novo Produto</a>
+    <a href="<?= $basePath ?>/produtos/create" class="btn btn-primary">Novo Produto</a>
 </div>
 
 <table class="table table-striped">
@@ -18,7 +18,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($produtos as $produto): ?>
+        <?php foreach($produtos as $produto): ?>
             <tr>
                 <td><?= $produto->getId() ?></td>
                 <td><?= htmlspecialchars($produto->getSku()) ?></td>
@@ -26,13 +26,13 @@
                 <td>R$ <?= number_format($produto->getPreco(), 2, ',', '.') ?></td>
                 <td><?= $produto->getCategoriaId() ?></td>
                 <td>
-                    <?php if ($produto->getFoto()): ?>
-                        <img src="/assets/img/<?= $produto->getFoto() ?>" width="50">
+                    <?php if($produto->getFoto()): ?>
+                        <img src="<?= $basePath ?>/assets/img/<?= $produto->getFoto() ?>" width="50">
                     <?php endif; ?>
                 </td>
                 <td>
-                    <a href="/produtos/edit?id=<?= $produto->getId() ?>" class="btn btn-sm btn-warning">Editar</a>
-                    <form action="/produtos/delete" method="POST" style="display:inline;">
+                    <a href="<?= $basePath ?>/produtos/edit?id=<?= $produto->getId() ?>" class="btn btn-sm btn-warning">Editar</a>
+                    <form action="<?= $basePath ?>/produtos/delete" method="POST" style="display:inline;">
                         <input type="hidden" name="id" value="<?= $produto->getId() ?>">
                         <button class="btn btn-sm btn-danger" onclick="return confirm('Excluir produto?')">Excluir</button>
                     </form>

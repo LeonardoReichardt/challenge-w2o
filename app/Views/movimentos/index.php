@@ -5,11 +5,11 @@
 <div class="row mb-4">
     <div class="col-md-6">
         <h4>Entrada de Produto</h4>
-        <form method="POST" action="/estoque/entrada">
+        <form method="POST" action="<?= $basePath ?>/estoque/entrada">
             <div class="mb-3">
                 <label class="form-label">Produto</label>
                 <select name="produto_id" class="form-select" required>
-                    <?php foreach ($produtos as $produto): ?>
+                    <?php foreach($produtos as $produto): ?>
                         <option value="<?= $produto->getId() ?>"><?= htmlspecialchars($produto->getNome()) ?></option>
                     <?php endforeach; ?>
                 </select>
@@ -28,11 +28,11 @@
 
     <div class="col-md-6">
         <h4>Saída de Produto</h4>
-        <form method="POST" action="/estoque/saida">
+        <form method="POST" action="<?= $basePath ?>/estoque/saida">
             <div class="mb-3">
                 <label class="form-label">Produto</label>
                 <select name="produto_id" class="form-select" required>
-                    <?php foreach ($produtos as $produto): ?>
+                    <?php foreach($produtos as $produto): ?>
                         <option value="<?= $produto->getId() ?>"><?= htmlspecialchars($produto->getNome()) ?></option>
                     <?php endforeach; ?>
                 </select>
@@ -63,7 +63,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($movimentos as $mov): ?>
+        <?php foreach($movimentos as $mov): ?>
             <tr>
                 <td><?= $mov->getId() ?></td>
                 <td><?= $mov->getProdutoId() ?></td>

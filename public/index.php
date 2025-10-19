@@ -7,12 +7,15 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use App\Core\Router;
 
+$config = require __DIR__ . '/../config/config.php';
+$basePath = $config['base_path'];
+
 $router = new Router();
 
-$router->get('/', function() {
+$router->get('/', function() use ($basePath) {
     echo "<h1>Sistema de Gerenciamento de Estoque</h1>";
     echo "<p>Bem-vindo! 🚀</p>";
-    echo "<a href='/produtos'>Ver produtos</a>";
+    echo "<a href='{$basePath}/produtos'>Ver produtos</a>";
 });
 
 #region Rotas de Produtos
@@ -52,7 +55,15 @@ $router->get('/relatorios/ranking', ['RelatorioController', 'rankingProdutos']);
 
 #endregion
 
-$uri = strtok($_SERVER["REQUEST_URI"], '?');
+$uri = strtok($_SERVER['REQUEST_URI'], '?');
 $method = $_SERVER['REQUEST_METHOD'];
+
+if(str_starts_with($uri, $basePath)) {
+    $uri = substr($uri, strlen($basePath));
+
+    if($uri === '') {
+        $uri = '/';
+    }
+}
 
 $router->dispatch($uri, $method);

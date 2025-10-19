@@ -2,7 +2,7 @@
 
 <h2>Editar Produto</h2>
 
-<form method="POST" action="/produtos/update" enctype="multipart/form-data">
+<form method="POST" action="<?= $basePath ?>/produtos/update" enctype="multipart/form-data">
     <input type="hidden" name="id" value="<?= $produto->getId() ?>">
 
     <div class="mb-3">
@@ -24,7 +24,7 @@
     <div class="mb-3">
         <label class="form-label">Categoria</label>
         <select name="categoria_id" class="form-select" required>
-            <?php foreach ($categorias as $categoria): ?>
+            <?php foreach($categorias as $categoria): ?>
                 <option value="<?= $categoria->getId() ?>" <?= $categoria->getId() == $produto->getCategoriaId() ? 'selected' : '' ?>>
                     <?= htmlspecialchars($categoria->getNome()) ?>
                 </option>
@@ -38,12 +38,12 @@
     <div class="mb-3">
         <label class="form-label">Foto</label><br>
         <?php if ($produto->getFoto()): ?>
-            <img src="/assets/img/<?= $produto->getFoto() ?>" width="100"><br><br>
+            <img src="<?= $basePath ?>/assets/img/<?= $produto->getFoto() ?>" width="100"><br><br>
         <?php endif; ?>
         <input type="file" name="foto" class="form-control" accept="image/jpeg,image/png">
     </div>
     <button type="submit" class="btn btn-primary">Atualizar</button>
-    <a href="/produtos" class="btn btn-secondary">Voltar</a>
+    <a href="<?= $basePath ?>/produtos" class="btn btn-secondary">Voltar</a>
 </form>
 
 <?php require __DIR__ . '/../layout/footer.php'; ?>
