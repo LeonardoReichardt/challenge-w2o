@@ -20,75 +20,68 @@ class ProdutoController extends Controller {
 
     public function create(): void {
         $categorias = (new ListCategorias())->execute();
-        $this->view('produtos/create', ['categorias' => $categorias]);
+
+        $this->view('produtos/create', [
+            'categorias' => $categorias,
+            'error'      => $_SESSION['error'] ?? null
+        ]);
+
+        unset($_SESSION['error']);
     }
 
+
     public function store(): void {
-        $data = $_POST;
-        $data['foto'] = null;
-
-        if(isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-            $file = $_FILES['foto'];
-
-            if($file['size'] <= 5 * 1024 * 1024 && in_array(mime_content_type($file['tmp_name']), ['image/jpeg', 'image/png'])) {
-                $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-                $filename = uniqid() . ".{$ext}";
-                move_uploaded_file($file['tmp_name'], __DIR__ . "/../../public/assets/img/{$filename}");
-                $data['foto'] = $filename;
-            }
-        }
-
         $useCase = new CreateProduto();
-        $useCase->execute($data);
 
-        $this->redirect('/produtos');
+        if(!$useCase->execute($_POST)) {
+            $this->redirect('/produtos/create');
+        }
+        else {
+            $this->redirect('/produtos');
+        }
     }
 
     public function edit(): void {
         $id = (int)($_GET['id'] ?? 0);
 
         if($id > 0) {
-            $useCase = new FindProduto();
-            $produto = $useCase->execute($id);
+            $produto = (new FindProduto())->execute($id);
+            $categorias = (new ListCategorias())->execute();
 
-            if($produto) {
-                $categorias = (new ListCategorias())->execute();
-
-                $this->view('produtos/edit', [
-                    'produto'    => $produto,
-                    'categorias' => $categorias
-                ]);
-
-                return;
+            if(!$produto) {
+                $_SESSION['error'] = 'Produto não encontrado.';
+                $this->redirect('/produtos');
             }
-        }
 
-        $this->redirect('/produtos');
+            $this->view('produtos/edit', [
+                'produto'    => $produto,
+                'categorias' => $categorias,
+                'error'      => $_SESSION['error'] ?? null
+            ]);
+
+            unset($_SESSION['error']);
+        } 
+        else {
+            $this->redirect('/produtos');
+        }
     }
 
     public function update(): void {
         $id = (int)($_POST['id'] ?? 0);
 
         if($id > 0) {
-            $data = $_POST;
-            $data['foto'] = null;
-
-            if(isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-                $file = $_FILES['foto'];
-
-                if($file['size'] <= 5 * 1024 * 1024 && in_array(mime_content_type($file['tmp_name']), ['image/jpeg', 'image/png'])) {
-                    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-                    $filename = uniqid() . ".{$ext}";
-                    move_uploaded_file($file['tmp_name'], __DIR__ . "/../../public/assets/img/{$filename}");
-                    $data['foto'] = $filename;
-                }
-            }
-
             $useCase = new UpdateProduto();
-            $useCase->execute($id, $data);
-        }
 
-        $this->redirect("/produtos");
+            if(!$useCase->execute($id, $_POST)) {
+                $this->redirect("/produtos/edit?id={$id}");
+            }
+            else {
+                $this->redirect('/produtos');
+            }
+        }
+        else {
+            $this->redirect('/produtos');
+        }
     }
 
     public function delete(): void {
@@ -98,7 +91,7 @@ class ProdutoController extends Controller {
             $useCase = new DeleteProduto();
             $useCase->execute($id);
         }
-        
+
         $this->redirect('/produtos');
     }
 

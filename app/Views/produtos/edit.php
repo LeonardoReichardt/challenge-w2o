@@ -1,5 +1,11 @@
 <?php require __DIR__ . '/../layout/header.php'; ?>
 
+<?php if(!empty($error)): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($error) ?>
+    </div>
+<?php endif; ?>
+
 <div class="mb-3">
     <h2>Editar Produto</h2>
     <hr class="text-muted">

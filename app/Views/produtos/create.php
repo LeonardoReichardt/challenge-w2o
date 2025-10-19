@@ -1,5 +1,11 @@
 <?php require __DIR__ . '/../layout/header.php'; ?>
 
+<?php if(!empty($error)): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($error) ?>
+    </div>
+<?php endif; ?>
+
 <div class="mb-3">
     <h2>Novo Produto</h2>
     <hr class="text-muted">
@@ -35,7 +41,7 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Foto</label>
-            <input type="file" name="foto" class="form-control" accept="image/jpeg,image/png">
+            <input type="file" name="foto" class="form-control" accept="image/jpeg,image/png" required>
         </div>
         
         <hr class="text-muted">
